@@ -27,6 +27,11 @@ import pageIndex_agent.pageindex.utils as pi_utils
 from pageIndex_agent.pageindex.page_index import page_index_main
 from pageIndex_agent.pageindex.utils import ConfigLoader
 
+# resolve_stored_path lives in backend_python/utils.py which is on sys.path
+from utils import resolve_stored_path
+
+_DOCS_DIR = str(Path(__file__).resolve().parents[2] / "backend_python" / "documents")
+
 router = APIRouter(prefix="/pageindex-api", tags=["pageindex-api"])
 
 
@@ -80,7 +85,7 @@ def index_document(req: IndexRequest):
     - **pdf_path**: absolute path to the PDF file
     - **output_dir**: directory where the structure JSON will be saved (default: `results/`)
     """
-    pdf_path = os.path.abspath(req.pdf_path)
+    pdf_path = resolve_stored_path(req.pdf_path, fallback_dir=_DOCS_DIR)
     if not os.path.isfile(pdf_path):
         raise HTTPException(status_code=404, detail=f"PDF not found: {pdf_path}")
     if not pdf_path.lower().endswith(".pdf"):
@@ -127,7 +132,7 @@ def retrieve(req: RetrieveRequest):
     - **query**: natural language question
     - **top_k**: max number of nodes to fetch content from (default: 5)
     """
-    pdf_path = os.path.abspath(req.pdf_path)
+    pdf_path = resolve_stored_path(req.pdf_path, fallback_dir=_DOCS_DIR)
     structure_path = os.path.abspath(req.structure_path)
 
     if not os.path.isfile(pdf_path):

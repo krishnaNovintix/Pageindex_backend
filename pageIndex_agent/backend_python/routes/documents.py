@@ -80,8 +80,9 @@ async def upload_document(file: UploadFile = File(...)):
     now = datetime.now(timezone.utc)
     doc = {
         "name": original_stem,                 # human-readable name shown in UI
-        "pdf_path": str(pdf_path.resolve()),   # absolute path used by the agent
-        "structure_path": str(structure_path.resolve()),
+        # Store paths relative to their base dirs so they work on any OS / host.
+        "pdf_path": str(DOCUMENTS_DIR / stored_filename),
+        "structure_path": str(RESULTS_DIR / f"{Path(stored_filename).stem}_structure.json"),
         "indexed": False,
         "indexed_at": None,
         "description": "",

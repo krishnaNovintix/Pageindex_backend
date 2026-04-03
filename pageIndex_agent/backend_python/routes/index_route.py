@@ -20,6 +20,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pageIndex_agent.pageindex.utils as pi_utils
 from pageIndex_agent.pageindex.page_index import page_index_main
 from pageIndex_agent.pageindex.utils import ConfigLoader
+from utils import resolve_stored_path
 
 router = APIRouter()
 
@@ -44,7 +45,8 @@ async def index_document(body: dict):
     if not pdf_path:
         raise HTTPException(status_code=400, detail="pdf_path is required")
 
-    pdf_path = os.path.abspath(pdf_path)
+    _DOCS_DIR = str(_RESULTS_DIR.parent / "documents")
+    pdf_path = resolve_stored_path(pdf_path, fallback_dir=_DOCS_DIR)
     if not os.path.isfile(pdf_path):
         raise HTTPException(status_code=404, detail=f"PDF not found: {pdf_path}")
 
