@@ -1,0 +1,269 @@
+{
+  "doc_name": "final_doc.pdf",
+  "structure": [
+    {
+      "title": "Preface",
+      "node_id": "0000",
+      "start_index": 1,
+      "end_index": 3,
+      "summary": "This partial document is a project report titled \"GEN AI-POWERED PERSONALIZED MENTAL HEALTH SUPPORT SYSTEM.\" It details a project undertaken by four students from the Department of Information Technology at SNS College of Technology, submitted in December 2025, for their Bachelor of Technology degree.\n\nThe core of the document, as outlined in the abstract, describes \"nMinds,\" a Retrieval-Augmented Generation (RAG)-based personalized mental health support platform. This system leverages Generative AI (specifically the Gemini language model) to provide contextually grounded and empathetic responses, addressing the limitations of existing platforms in terms of context awareness and adaptability.\n\nThe technical architecture involves a modular microservice design with a Go backend and a Next.js/React frontend. A crucial RAG pipeline transforms contextual data into embeddings stored in ChromaDB (integrated with Postgres/MySQL), allowing the system to retrieve relevant knowledge to augment user queries and generate accurate, emotionally relevant AI responses. Phase One focuses on foundational components like RAG integration, AI response generation, and backend orchestration, with future plans for workflow automation, sentiment analysis, and multimodal capabilities."
+    },
+    {
+      "title": "ABSTRACT",
+      "node_id": "0001",
+      "start_index": 3,
+      "end_index": 3,
+      "summary": "The document describes nMinds, a Retrieval-Augmented Generation (RAG)-based personalized mental health support platform that uses Generative AI to provide contextually grounded and empathetic responses, addressing the lack of context awareness in existing AI solutions. It details the system's modular microservice architecture, including a Go backend, a Next.js/React frontend, and Gemini as the core AI model. A crucial component is the RAG pipeline, which transforms contextual data into embeddings stored in ChromaDB (integrated with Postgres/MySQL) to retrieve relevant information for augmenting AI prompts. Phase One focuses on implementing foundational components like RAG integration, AI response generation, and backend orchestration, laying the groundwork for future enhancements such as workflow automation and multimodal capabilities."
+    },
+    {
+      "title": "ACKNOWLEDGEMENT",
+      "node_id": "0002",
+      "start_index": 4,
+      "end_index": 7,
+      "summary": "The partial document begins with an Acknowledgement section, expressing gratitude to the management, principal, various professors, project coordinator, project guide, faculty, staff, parents, and friends for their support in completing a project. Following this, it presents a detailed Table of Contents, outlining the structure of a technical report. Key sections include an Introduction (covering project overview, problem statement, purpose, and a domain overview listing technologies such as GO, Next.js, Vector Embeddings, Large Language Models (LLMs), ChromaDB, JWT, and Database Management), a Literature Survey, and a chapter on Work Done in Phase I (detailing existing and proposed systems, architecture, and workflow). Further chapters cover System Requirements (including output and algorithms), Conclusion and Future Work, and Appendices (containing software specifications, source code, and sample RAG code). The document also includes a List of Figures, referencing diagrams for workflow, UI/UX pages, and code snippets."
+    },
+    {
+      "title": "LIST OF FIGURES",
+      "node_id": "0003",
+      "start_index": 7,
+      "end_index": 8,
+      "summary": "The partial document introduces nMinds, a Retrieval-Augmented Generation (RAG)-based mental health assistance system designed to provide informed, empathetic, and contextually relevant support using Generative AI (Gemini). It highlights the limitations of existing digital mental health solutions and positions nMinds as a solution to offer personalized responses by understanding user inputs and retrieving knowledge from a curated dataset.\n\nThe document outlines the system's architecture, focusing on Phase One, which integrates a RAG pipeline, a Go-based backend, and a Next.js + React frontend, utilizing ChromaDB for data storage. It emphasizes the role of AI in delivering scalable mental health resources and ensuring responses are grounded in factual and therapeutic context. Future phases are planned to include sentiment analysis, automation workflows, and multimodal interaction. Additionally, the document's list of figures indicates coverage of the system's workflow, UI/UX design, and specific frontend (CSS, HTML) and backend code components."
+    },
+    {
+      "title": "INTRODUCTION",
+      "node_id": "0004",
+      "start_index": 8,
+      "end_index": 8,
+      "summary": "This partial document introduces nMinds, a Retrieval-Augmented Generation (RAG)-based mental health assistance system designed to address limitations in existing digital solutions, such as lack of contextual understanding and personalized memory. nMinds aims to provide informed, empathetic, and contextually relevant support using Generative AI (specifically Gemini) by understanding user inputs, retrieving knowledge from a curated dataset, and generating personalized responses.\n\nThe document highlights the transformative role of AI in delivering scalable mental health resources, emphasizing that the RAG pipeline ensures responses are conversationally coherent and grounded in factual, therapeutic context from trusted sources. In its initial phase, the system operates as a text-based knowledge and support interface, utilizing ChromaDB for data retrieval and Gemini for response generation. Future plans include expanding capabilities to sentiment analysis, automation workflows, and multimodal interaction.",
+      "nodes": [
+        {
+          "title": "OVERVIEW",
+          "node_id": "0005",
+          "start_index": 8,
+          "end_index": 11,
+          "summary": "The partial document introduces \"nMinds,\" a Retrieval-Augmented Generation (RAG)-based mental health assistance system designed to provide accessible, personalized, and contextually relevant support using Generative AI (Gemini).\n\n**Main points covered include:**\n\n*   **Introduction to nMinds:** It addresses the limitations of existing digital mental health solutions, which often lack contextual understanding and personalized memory, by offering informed and empathetic responses grounded in a curated dataset.\n*   **Role of AI in Mental Health:** Highlights how AI, particularly RAG pipelines, can deliver personalized coping strategies, relevant literature, and conversational support at scale, ensuring responses are coherent and factually grounded.\n*   **Core Features of nMinds (Phase One):**\n    *   **Document Upload & RAG-Powered Query:** Users can upload documents, which are processed into vector embeddings (ChromaDB) for semantic search, allowing Gemini to generate context-augmented responses.\n    *   **Conversational AI Interface:** An intuitive chat-like interface built with Next.js + React, communicating with a Go microservice backend via RESTful APIs.\n    *   **Backend and RAG Architecture:** A modular Go-based backend orchestrates API requests, user sessions, database operations, and the RAG pipeline (document processing, embedding generation, vector storage, context retrieval).\n    *   **Data Management and Storage:** Utilizes Postgres/MySQL for structured data and ChromaDB for vector embeddings, with secure data flow via REST APIs and JWT authentication.\n*   **Technical Implementation and Architecture:** Details the technology stack, including Go for the backend, Next.js with React for the frontend, Gemini API for AI, ChromaDB for vector storage, and Postgres/MySQL for databases.\n*   **Authentication & Security:** Emphasizes JWT-based session control and secure handling of user data.\n*   **Evaluation Metrics (Phase One):** Defines criteria for success, including Retrieval Accuracy, Response Quality, System Performance, and User Experience.\n*   **Problem Statement:** Outlines the current challenges in digital mental health support, such as generic responses, lack of emotional context, ungrounded AI systems, and the absence of tools for querying personal curated materials."
+        },
+        {
+          "title": "PROBLEM STATEMENT",
+          "node_id": "0006",
+          "start_index": 11,
+          "end_index": 12,
+          "summary": "This partial document describes \"nMinds,\" a Retrieval-Augmented Generation (RAG)-based mental health support platform. It outlines the current problems in digital mental health support, such as generic responses, lack of emotional context, misinformation, and the inability to integrate personal documents or maintain conversational continuity.\n\nThe project's objective is to develop an intelligent, context-aware conversational platform for personalized mental health support, focusing on text-based interactions in Phase One. Key features include a RAG pipeline that uses ChromaDB for vector embeddings of mental health content and Gemini AI for generating empathetic, evidence-based responses, along with context-aware conversation through minimal session memory.\n\nThe document also details the authentication and security measures, including JWT-based session control and secure data handling. Finally, it lists the evaluation metrics for Phase One: Retrieval Accuracy, Response Quality, System Performance, and User Experience."
+        },
+        {
+          "title": "PURPOSE OF PROJECT",
+          "node_id": "0007",
+          "start_index": 12,
+          "end_index": 14,
+          "summary": "The partial document describes nMinds, a Retrieval-Augmented Generation (RAG)-based mental health support platform designed to provide intelligent, context-aware, and personalized assistance.\n\nIt outlines the technical challenges in building such a platform and presents nMinds as a solution combining knowledge-grounded retrieval, conversational intelligence, and contextual understanding using Gemini AI. The platform is built with a Go backend, Next.js + React frontend, and ChromaDB vector store, aiming for an accessible, accurate, empathetic, scalable, and privacy-preserving architecture.\n\nThe primary objective for Phase One is to develop a text-based conversational system that retrieves contextually relevant responses from stored knowledge and generates empathetic, grounded replies via the Gemini AI model. Key features for this phase include:\n*   **Retrieval-Augmented Conversational AI (RAG):** Converting mental health content into vector embeddings for semantic search and evidence-based responses.\n*   **Context-Aware Conversation:** Maintaining continuity through minimal session memory for personalized interactions.\n*   **Scalable Backend Architecture:** A Go-based backend for orchestration, user management, and secure communication.\n*   **Interactive Frontend Interface:** A Next.js + React chat-like experience for users.\n*   **Hybrid Data Management:** Using Postgres/MySQL for structured data and ChromaDB for vector embeddings.\n\nThe document lists the core technologies used, including Gemini API, ChromaDB, Go, Next.js + React, Postgres/MySQL, and JWT authentication. It also defines evaluation metrics for Retrieval Accuracy, Response Quality, System Performance, and User Experience.\n\nLooking ahead, future phases envision transforming nMinds into a multimodal, emotionally adaptive AI companion by integrating sentiment analysis, voice input/output, advanced multi-LLM reasoning, and multi-answer exploration. The document concludes by beginning a domain overview, starting with a description of Go (Golang) and its benefits for scalable backend systems."
+        },
+        {
+          "title": "DOMAIN OVERVIEW",
+          "node_id": "0008",
+          "start_index": 14,
+          "end_index": 14,
+          "summary": "The partial document covers three main areas: evaluation criteria for a system (System Performance and User Experience), a vision for future phases of an AI companion called \"nMinds\" detailing planned enhancements like sentiment analysis, voice interaction, and advanced reasoning for mental wellness, and a domain overview of the Go (Golang) programming language, describing its features, creators, and typical applications.",
+          "nodes": [
+            {
+              "title": "GO",
+              "node_id": "0009",
+              "start_index": 14,
+              "end_index": 15,
+              "summary": "The partial document outlines key aspects of the nMinds project, covering its evaluation criteria, future development vision, and core technologies. It details system performance metrics like API response time and retrieval speed, alongside user experience factors such as simplicity and relevance. The vision for future phases includes integrating sentiment analysis, voice input/output, DeepSearch pipelines, and multi-answer exploration to evolve nMinds into a multimodal, emotionally adaptive AI companion for mental wellness. Furthermore, it provides a domain overview of the technologies used: Go (Golang) as the core backend language for scalability and data management, Next.js as the frontend framework for an intuitive user interface, and Vector Embeddings with Semantic Search for enabling Retrieval-Augmented Generation (RAG) to provide contextually relevant and emotionally sensitive responses from the Gemini AI model."
+            },
+            {
+              "title": "NEXT.JS",
+              "node_id": "0010",
+              "start_index": 15,
+              "end_index": 15,
+              "summary": "The partial document describes key technological components and concepts used in the \"nMinds\" project. It details Go as the core backend language, responsible for handling user sessions, API requests, data flow between databases (Postgres/MySQL and ChromaDB), and communication with the Gemini AI model, chosen for its performance and scalability. Next.js is presented as the frontend framework, providing the user interface for chat, document uploads, and displaying real-time responses from the Gemini model, emphasizing its optimization features and user experience. Finally, it explains the role of Vector Embeddings and Semantic Search in enabling Retrieval-Augmented Generation (RAG), outlining how text is converted into embeddings, stored in ChromaDB, and used to find contextually relevant information for the Gemini model to generate accurate and sensitive responses."
+            },
+            {
+              "title": "VECTOR EMBEDDINGS AND SEMANTIC SEARCH",
+              "node_id": "0011",
+              "start_index": 15,
+              "end_index": 16,
+              "summary": "This partial document describes key technological components and their roles within the \"nMinds\" project, a context-aware, real-time conversational system. It details:\n\n*   **Go Language:** Serving as the core backend language, responsible for user sessions, API orchestration, data management between databases (Postgres/MySQL and ChromaDB), and communication with the Gemini AI model, ensuring performance and scalability.\n*   **Next.js:** Utilized as the frontend framework to build the user interface, enabling users to chat, upload documents, and receive mental health insights, while interacting with the Go backend and Gemini model.\n*   **Vector Embeddings and Semantic Search:** Explaining how text is converted into numerical representations (embeddings) and stored in ChromaDB to enable Retrieval-Augmented Generation (RAG), ensuring contextually relevant and evidence-based responses from the AI.\n*   **Large Language Models (LLMs):** Highlighting Gemini (Google's LLM) as the core conversational intelligence engine for nMinds, performing conversational reasoning, RAG, and emotional awareness to provide empathetic guidance.\n*   **ChromaDB (Vector Database):** Describing its function as a high-performance vector database that powers the RAG pipeline by storing embeddings and facilitating real-time semantic search for relevant content.\n*   **JWT (JSON Web Token) Authentication:** Explaining its use for secure, stateless authentication to ensure only authorized users can access sensitive features like document uploads and chat sessions within nMinds."
+            },
+            {
+              "title": "Large Language Models (LLMs)",
+              "node_id": "0012",
+              "start_index": 16,
+              "end_index": 16,
+              "summary": "This partial document describes key technological components used in the \"nMinds\" project. It details the role of Large Language Models (LLMs), specifically Google's Gemini, as the core conversational intelligence engine responsible for conversational reasoning, Retrieval-Augmented Generation (RAG), and emotional awareness to provide psychologically aligned guidance. It then explains ChromaDB, a high-performance vector database, which powers the RAG pipeline by storing embeddings, performing semantic search, and enabling hybrid search for fast and context-aware knowledge retrieval. Finally, it covers JWT (JSON Web Token) authentication, outlining its use for securing sensitive routes and ensuring only authenticated users can access features like document upload and chat sessions within nMinds."
+            },
+            {
+              "title": "ChromaDB (Vector Database)",
+              "node_id": "0013",
+              "start_index": 16,
+              "end_index": 16,
+              "summary": "This partial document describes key technological components used in the \"nMinds\" project. It details the role of Large Language Models (LLMs), specifically Google's Gemini, as the core conversational intelligence engine responsible for conversational reasoning, Retrieval-Augmented Generation (RAG), and emotional awareness to provide psychologically aligned guidance. It then explains ChromaDB, a high-performance vector database, which powers the RAG pipeline by storing embeddings, performing semantic search, and enabling hybrid search for fast and context-aware knowledge retrieval. Finally, it covers JWT (JSON Web Token) authentication, outlining its use for securing sensitive routes and ensuring only authenticated users can access features like document upload and chat sessions within nMinds."
+            },
+            {
+              "title": "JWT (JSON Web Token) Authentication",
+              "node_id": "0014",
+              "start_index": 16,
+              "end_index": 17,
+              "summary": "The partial document outlines the core technological components of the \"nMinds\" project. It details the use of Large Language Models (specifically Google's Gemini) as the central conversational AI engine, responsible for conversational reasoning, Retrieval-Augmented Generation (RAG), and emotional awareness to provide psychologically aligned guidance. It then describes ChromaDB, a vector database, which powers the RAG pipeline by storing and retrieving semantic embeddings from user documents and wellness datasets. The document also covers JWT (JSON Web Token) for secure, stateless user authentication to control access to sensitive features, and PostgreSQL/MySQL for structured data management, storing user profiles, chat histories, and metadata, noting its integration with ChromaDB to form a hybrid data retrieval architecture."
+            },
+            {
+              "title": "Database Management (Postgres/MySQL",
+              "node_id": "0015",
+              "start_index": 17,
+              "end_index": 18,
+              "summary": "The partial document describes the technical architecture and underlying principles of a conversational AI system, likely named \"nMinds.\" It covers:\n\n1.  **API Security and Scalability:** Discusses stateless token validation for API requests to ensure security, privacy, and scalability without session management overhead.\n2.  **Database Management:** Details the use of relational databases (Postgres/MySQL) as the backbone for structured data storage (user profiles, chat histories, metadata, authentication records). It highlights advantages like ACID compliance, query efficiency, and integration with vector stores (ChromaDB) to form a hybrid data search architecture (relational + semantic).\n3.  **Evolution of Conversational AI:** Provides a literature survey on the rapid evolution of conversational AI, from simple chatbots to context-aware systems, emphasizing the role of Large Language Models (LLMs) and challenges in memory, knowledge grounding, and personalization.\n4.  **Hybrid Memory Architectures:** Explores modern hybrid memory architectures essential for human-like dialogue, categorizing them into Semantic Memory (factual knowledge via vector embeddings, e.g., ChromaDB), Episodic Memory (chronological interaction history), and Procedural Memory (step-by-step task knowledge).\n5.  **nMinds Phase One Implementation:** Specifically outlines how nMinds Phase One prioritizes semantic memory (implemented with ChromaDB for mental health knowledge) and episodic memory (maintained in Postgres/MySQL for conversation history to enable context-aware responses from Gemini)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "LITERATURE SURVEY",
+      "node_id": "0016",
+      "start_index": 18,
+      "end_index": 21,
+      "summary": "This partial document provides a literature survey on the evolution of conversational AI, focusing on advanced techniques to enhance Large Language Models (LLMs). It covers the development of hybrid memory architectures (semantic, episodic, and procedural memory) for maintaining context and factual knowledge, and explains Retrieval-Augmented Generation (RAG) as a method to ground LLM responses in external, dynamic information. The text also discusses strategies for building context-aware conversational AI platforms, including session management and knowledge bases structured with vector embeddings. These concepts are validated through their application in \"nMinds Phase One,\" particularly for mental health and knowledge-based applications. Finally, the document identifies and elaborates on the drawbacks of existing conversational AI systems, such as monolithic memory, out-of-distribution vulnerability, limited multimodal integration, and scalability challenges."
+    },
+    {
+      "title": "WORK DONE IN PHASE I",
+      "node_id": "0017",
+      "start_index": 21,
+      "end_index": 21,
+      "summary": "This partial document, part of a \"WORK DONE IN PHASE I\" chapter, focuses on the \"EXISTING SYSTEM\" in conversational AI and content generation. It describes how current platforms primarily leverage Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) for text-based interactions. The main points covered are the significant limitations and drawbacks of these existing systems, including:\n\n*   **Memory Architecture:** Over-reliance on monolithic vector embeddings, struggling with different memory types (semantic, episodic, procedural, emotional), and a lack of hybrid architectures for long-term vs. short-term memory.\n*   **Out-of-Distribution (OOD) Handling:** Vulnerability to queries outside their knowledge base, leading to hallucinations or inaccurate answers, and poor graceful failure for unknown queries.\n*   **Multimodal Integration:** Limited capabilities beyond text, resulting in fragmented outputs for images, audio, or video, and inefficient multimedia pipelines lacking iterative refinement.\n*   **Scalability and Resource Efficiency:** High computational demands for real-time processing of large documents, making solutions unsuitable for responsive applications, and resource-intensive workflows without proper preprocessing.\n*   **Semantic Drift:** Inconsistencies in vector databases over time, causing varying results for identical queries.",
+      "nodes": [
+        {
+          "title": "EXISTING SYSTEM",
+          "node_id": "0018",
+          "start_index": 21,
+          "end_index": 22,
+          "summary": "This partial document, titled \"WORK DONE IN PHASE I,\" describes the initial phase of developing a conversational AI platform called nMinds. It begins by outlining the limitations of existing conversational AI systems, particularly those leveraging Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG). These drawbacks include monolithic memory architectures, vulnerability to out-of-distribution queries, limited multimodal integration, scalability challenges, lack of hybrid memory, semantic drift, and resource-intensive workflows.\n\nTo address these issues, the document proposes a new modular conversational AI platform for nMinds Phase I. Key innovations of this proposed system include a \"Plan A – Plan B RAG Framework\" (combining expert AI with a general AI fallback), a hybrid memory architecture (semantic memory via ChromaDB and episodic memory via Postgres/MySQL), modular orchestration using a Go backend, and a scalable, extensible architecture based on containerized microservices.\n\nFinally, the document details the specific work completed in Phase I, which involved building the foundational platform. This includes implementing a Go-based microservices backend with RESTful APIs for authentication and content generation, and integrating RAG capabilities through ChromaDB for document embedding, chunking, and semantic retrieval, supported by a Python microservice for embedding generation."
+        },
+        {
+          "title": "PROPOSED SYSTEM",
+          "node_id": "0019",
+          "start_index": 22,
+          "end_index": 22,
+          "summary": "The partial document describes the proposed nMinds Phase I system, a modular conversational AI platform featuring document-grounded RAG and multimodal support. It details the system's architecture, which includes a microservices-style Go backend, a Next.js/React frontend, and ChromaDB for semantic memory.\n\nKey design innovations highlighted are:\n*   **Plan A – Plan B RAG Framework:** Utilizing an \"Expert AI\" for context retrieval from user-uploaded documents and a \"General AI\" (Gemini) as a fallback.\n*   **Hybrid Memory Architecture:** Combining ChromaDB for semantic memory (document embeddings) and Postgres/MySQL for episodic memory (conversation logs).\n*   **Modular Orchestration:** The Go backend manages calls to various generative services like Gemini and SDXL.\n*   **Scalable and Extensible Architecture:** Employing containerized services (Docker) for independent scaling and future integration.\n\nThe document also outlines the work completed in Phase I, focusing on building the foundational platform. This includes implementing the Go-based microservices backend with RESTful APIs and asynchronous processing, as well as integrating RAG and database components like ChromaDB for document embeddings, chunking, and similarity search via a Python microservice.",
+          "nodes": [
+            {
+              "title": "WORK DONE FOR PHASE I",
+              "node_id": "0020",
+              "start_index": 22,
+              "end_index": 23,
+              "summary": "This partial document describes the nMinds Phase I proposed system, a modular conversational AI platform featuring document-grounded RAG and multimodal support. It details the system's architecture, which includes a microservices-style Go backend, a Next.js/React frontend, and ChromaDB for semantic memory. Key design innovations highlighted are the \"Plan A – Plan B\" RAG framework (expert AI with fallback to general AI), a hybrid memory architecture (semantic via ChromaDB, episodic via Postgres/MySQL), modular orchestration, and a scalable, extensible containerized architecture.\n\nThe document further outlines the work completed in Phase I, focusing on building the foundational platform. This includes the implementation of the Go-based microservices backend with RESTful APIs, integration of ChromaDB for RAG and document processing pipelines, n8n for AI workflow automation, and model integrations for Gemini (LLM) and SDXL (text-to-image). Frontend development using Next.js/React for chat and content generation interfaces, along with containerization using Docker, are also covered.\n\nFinally, it provides an overview of the Phase I system's architecture, emphasizing its decoupled frontend-backend design. It specifies the roles of the Next.js/React frontend, the Go backend (handling requests, orchestration, and RAG logic), and the Multimodal Knowledge Base (MMKB) for storing raw documents and generated media."
+            }
+          ]
+        },
+        {
+          "title": "ARCHITECTURE OF THE PROPOSED SYSTEM",
+          "node_id": "0021",
+          "start_index": 23,
+          "end_index": 25,
+          "summary": "The partial document describes the technical architecture and implementation details of a multimodal AI system, focusing on its Phase I development. It covers the integration of n8n for AI workflow automation and task routing (RAG queries, image generation), the specific AI models integrated (Gemini for conversational LLM, SDXL for text-to-image, and planned TTS models), and the development of a Next.js/React frontend with chat and voice capabilities. The document also details the system's containerization using Docker and Docker Compose, and outlines the overall architecture, which includes a decoupled Go backend, a Multimodal Knowledge Base (MMKB) with file storage and a ChromaDB vector database, and a five-step data flow process from user perception to rendering outputs."
+        },
+        {
+          "title": "WORKFLOW DIAGRAM",
+          "node_id": "0022",
+          "start_index": 25,
+          "end_index": 26,
+          "summary": "The partial document describes the system requirements for \"NMinds,\" an intelligent mental health conversational agent. It briefly references a workflow diagram before detailing the system's design. The NMinds system utilizes a Retrieval-Augmented Generation (RAG) setup, leveraging AI, vector embeddings, and the Gemini API to provide contextual, empathetic, and accurate responses based on document-based context retrieval and semantic memory.\n\nThe document provides a summary of the system's technical requirements, including the chosen technologies for the frontend (Next.js + React), backend (Go), database (PostgreSQL/MySQL), vector store (ChromaDB), AI model (Gemini API), deployment (Docker), authentication (JWT), and memory design (hybrid).\n\nFinally, it lists the five core modules of the system: Document Ingestion & Processing, Vector Embedding Generation, Semantic Retrieval & RAG Pipeline, Conversational Orchestration, and Evaluation & Quality Assurance, with a detailed description of the Document Ingestion & Processing module."
+        }
+      ]
+    },
+    {
+      "title": "SYSTEM REQUIREMENTS",
+      "node_id": "0023",
+      "start_index": 26,
+      "end_index": 29,
+      "summary": "The partial document describes the NMinds system, an intelligent mental health conversational agent utilizing a Retrieval-Augmented Generation (RAG) setup. It details the system's design for Phase I, focusing on building a foundation for document-based context retrieval, semantic memory management, and conversational understanding through the Gemini API.\n\nKey aspects covered include:\n*   **System Purpose:** To provide contextual, empathetic, and accurate responses for mental health support.\n*   **Core Technologies:** Leveraging AI, vector embeddings, semantic retrieval, and document grounding.\n*   **System Requirements Summary:** A breakdown of the technology stack, including Next.js + React for the frontend, Go for the backend, PostgreSQL/MySQL for the database, ChromaDB for the vector store, Gemini API for AI, Docker for deployment, JWT for authentication, and a hybrid memory design.\n*   **Modular Architecture:** A detailed explanation of five main modules:\n    1.  **Document Ingestion & Processing:** Handling user uploads, file validation, text extraction, chunking, and metadata tagging.\n    2.  **Vector Embedding Generation:** Converting document chunks into high-dimensional embeddings for semantic search.\n    3.  **Semantic Retrieval & RAG Pipeline:** The core intelligence layer, outlining the steps from user query embedding to generating grounded responses using retrieved context and the Gemini API.\n    4.  **Conversational Orchestration:** Managing data flow, request validation, memory retrieval, context preparation, and error handling.\n    5.  **Evaluation & Quality Assurance:** Ensuring response quality through retrieval metrics, response accuracy, performance metrics, and user feedback logging.\nThe document concludes by briefly mentioning \"Output\" and \"UI/UX\" figures, indicating visual representations of the system's interface.",
+      "nodes": [
+        {
+          "title": "OUTPUT",
+          "node_id": "0024",
+          "start_index": 29,
+          "end_index": 31,
+          "summary": "The partial document describes the \"NMinds\" system, focusing on its architecture and core algorithms. It begins with visual outputs related to UI/UX design (Figures 4.1.1-4.1.4). The main technical section details the \"ALGORITHM\" for the NMinds system, which integrates retrieval-augmented conversational intelligence with context-grounded text generation using transformer-based large language models (LLMs) and dense vector retrieval. Specifically, it outlines \"Phase One\" of the system, utilizing a Go backend, Google's Gemini API for AI responses, and ChromaDB with SQL for hybrid memory. The document further elaborates on the role of the Large Language Model (Gemini API) in processing queries and generating responses, and provides a detailed explanation of the Retrieval-Augmented Generation (RAG) mechanism, including document chunking, vector embedding storage in ChromaDB, similarity search, and contextual prompt composition to ensure accurate and contextually consistent answers."
+        },
+        {
+          "title": "ALGORITHM",
+          "node_id": "0025",
+          "start_index": 31,
+          "end_index": 34,
+          "summary": "The partial document describes the architecture and core components of NMinds Phase One, a system designed as an intelligent, context-aware mental health conversational agent leveraging Retrieval-Augmented Generation (RAG).\n\nThe main points covered include:\n\n1.  **System Overview:** NMinds integrates transformer-based Large Language Models (LLMs) with dense vector retrieval for context-grounded text generation, focusing on text-based RAG functionality in Phase One.\n2.  **Large Language Model (LLM):** It utilizes Google's Gemini API, a transformer-based LLM, to process user queries and generate conversational responses by understanding semantic relationships in text.\n3.  **Retrieval-Augmented Generation (RAG):** This is the core mechanism where uploaded knowledge documents are processed, chunked, and stored as vector embeddings in ChromaDB. User queries are converted to embeddings, used for similarity search in ChromaDB, and the retrieved context is appended to the query before being sent to the Gemini API for a context-grounded response.\n4.  **Hybrid Memory Architecture:** The system employs a dual memory system: Semantic Memory (vector embeddings in ChromaDB for document retrieval) and Episodic Memory (conversation logs in SQL for session continuity and chat history).\n5.  **Backend Service Orchestration:** The backend, built with Go, follows a modular controller-service pattern, with dedicated services for RAG client operations, conversation management, and database interactions, ensuring scalability and maintainability.\n6.  **Security and Access Control:** User sessions are protected using JWT (JSON Web Token) authentication and Role-Based Access Control, with secure APIs for data exchange.\n7.  **Frontend Communication:** A Next.js + React frontend communicates with the Go backend via REST APIs, facilitating user input, backend processing, and response display.\n8.  **Conclusion of Phase One:** NMinds Phase One successfully establishes a robust, text-based backend capable of document-grounded, context-aware chat, maintaining conversation history, and delivering meaningful responses. It provides a scalable, secure, and production-ready core for future extensions."
+        }
+      ]
+    },
+    {
+      "title": "CONCLUSION AND FUTURE WORK",
+      "node_id": "0026",
+      "start_index": 34,
+      "end_index": 34,
+      "summary": "The partial document is the conclusion section of \"Chapter 5\" for the NMinds Phase One project. It describes the successful establishment of a foundation for an intelligent, context-aware mental health conversational agent powered by Retrieval-Augmented Generation (RAG). Key points covered include the system's architecture, which integrates the Gemini API, a Go backend, a Next.js + React frontend, and a hybrid memory system (SQL for episodic memory and ChromaDB for semantic memory). The document highlights the system's capabilities, such as performing document-grounded, context-aware chat, maintaining conversation history, and delivering meaningful responses. It emphasizes a modular, API-driven design ensuring scalability and security, and lists specific achievements like a functional Go backend with RAG and Gemini integration, hybrid memory, context-aware AI, and JWT authentication. Finally, it positions NMinds as a reliable platform for future extensions and evolution into a complete mental health companion.",
+      "nodes": [
+        {
+          "title": "CONCLUSION",
+          "node_id": "0027",
+          "start_index": 34,
+          "end_index": 35,
+          "summary": "The partial document provides a conclusion for \"NMinds Phase One,\" detailing the successful establishment of an intelligent, context-aware mental health conversational agent. It highlights the system's foundation, which includes Retrieval-Augmented Generation (RAG), Gemini API integration, a Go backend, Next.js + React frontend, and a hybrid memory system (SQL for episodic, ChromaDB for semantic). Key achievements include context-aware chat, knowledge grounding, conversation memory, JWT authentication, and a modular, scalable architecture.\n\nThe document then outlines \"Future Work\" for NMinds, focusing on expanding its capabilities beyond text-only RAG. Planned enhancements include sentiment analysis and therapeutic contexts, voice and speech integration, human-in-the-loop escalation for critical risk detection, workflow automation via n8n, advanced RAG features (graph-based RAG, DeepSearch), improved scalability and monitoring, and enhanced security and compliance (RBAC, data encryption)."
+        },
+        {
+          "title": "FUTURE WORK",
+          "node_id": "0028",
+          "start_index": 35,
+          "end_index": 36,
+          "summary": "The partial document outlines the future development roadmap and the software specifications for a system named NMinds.\n\nThe \"Future Work\" section details planned enhancements for NMinds, including:\n*   **Multimodal Intelligence**: Expanding beyond text-only RAG to incorporate sentiment analysis, therapeutic contexts, and voice/speech integration (using Whisper and Kokoro/F5-TTS).\n*   **Automation**: Implementing workflow automation via n8n for tasks like journaling and reminders, connecting to external systems.\n*   **Human-in-the-Loop Escalation**: Developing conservative rules for critical risk detection (e.g., suicidal ideation) with audit trails and manual verification.\n*   **Advanced RAG Features**: Introducing Graph-based RAG and DeepSearch refinement for improved memory and retrieval precision.\n*   **Scalability & Monitoring**: Enhancing system reliability with async task queues, load balancing, and monitoring dashboards.\n*   **Security & Compliance**: Strengthening security with RBAC, data encryption, and improved audit logging.\n\nThe \"Software Specification\" section provides a technical overview of NMinds, covering:\n*   **Operating System**: Windows for development and Docker Containers for deployment.\n*   **Frontend**: Built with Next.js (React + TypeScript), Tailwind CSS, Node.js, and Axios.\n*   **Backend**: Developed in Go (Golang) using net/http, gorm, and jwt-go, featuring a modular architecture and RESTful APIs.\n*   **AI & Model Services**: Utilizing the Gemini API for core conversational reasoning and ChromaDB as the vector database for the RAG system. Future expansion plans include n8n for workflow automation, Whisper for speech-to-text, Kokoro/F5-TTS for text-to-speech, and ComfyUI for visual generation workflows."
+        }
+      ]
+    },
+    {
+      "title": "APPENDIX 1",
+      "node_id": "0029",
+      "start_index": 36,
+      "end_index": 36,
+      "summary": "This partial document outlines the software specifications for a system, detailing the technologies and architecture used across various components. It covers the operating system environments (Windows 10/11 for development, Docker for deployment), frontend technologies (Next.js, Tailwind CSS, Node.js, Axios), backend stack (Go, net/http, gorm, jwt-go, RESTful APIs for chat, memory, and RAG), and AI & Model Services (Gemini API for LLM, ChromaDB for RAG). It also mentions future expansion plans for AI services, including workflow automation, speech-to-text, text-to-speech, and visual generation."
+    },
+    {
+      "title": "SOFTWARE SPECIFICATION",
+      "node_id": "0030",
+      "start_index": 36,
+      "end_index": 38,
+      "summary": "This partial document primarily details the **software specification** for a system, outlining its comprehensive technology stack and architecture.\n\nKey points covered include:\n*   **Operating Environment:** Specifies Windows 10/11 for development and Docker for deployment.\n*   **Frontend Technologies:** Uses Next.js (React + TypeScript) with Tailwind CSS, Node.js, npm/yarn, Axios, and VS Code.\n*   **Backend Technologies and Architecture:** Built with Go (Golang), utilizing `net/http`, `gorm`, and `jwt-go`. It follows a modular architecture with Controllers, Services, Models, and Middleware, exposing RESTful APIs for chat, memory, and RAG (Retrieval-Augmented Generation).\n*   **AI & Model Services:** Integrates the Gemini API for core conversational reasoning and response generation, and ChromaDB as a vector database for its RAG system. It also outlines future expansion plans for workflow automation (n8n), speech-to-text (Whisper), text-to-speech (Kokoro/F5-TTS), visual generation (ComfyUI), and enhanced reasoning capabilities.\n*   **Data & Storage:** Employs PostgreSQL/MySQL for metadata, user sessions, and chat logs, ChromaDB for vector embeddings, and a local directory for file storage.\n*   **Integration Layer:** Describes the component responsible for communication between the Go backend and the Gemini API, handling context and memory persistence.\n*   **Development & Monitoring Tools:** Lists tools like Docker/Docker Compose for deployment, Postman for API testing, Git & GitHub for version control, and Google Colab/Jupyter for future experimentation.\n*   **Key Packages & Dependencies:** Enumerates specific libraries and frameworks used across the Go backend, Next.js frontend, and future Python integrations.\n*   **Source Code Reference:** Briefly mentions the inclusion of source code (specifically frontend) in a subsequent appendix, though the actual code is not provided in this excerpt."
+    },
+    {
+      "title": "APPENDIX 2",
+      "node_id": "0031",
+      "start_index": 38,
+      "end_index": 38,
+      "summary": "This partial document is Appendix 2, specifically section A2.1, which covers the source code. It focuses on the frontend code and includes figures (Fig A2.1.1 and Fig A2.1.2) illustrating this frontend code."
+    },
+    {
+      "title": "SOURCE CODE",
+      "node_id": "0032",
+      "start_index": 38,
+      "end_index": 40,
+      "summary": "The partial document contains two appendices. Appendix 2, titled \"SOURCE CODE,\" references frontend and backend code, likely through figures. Appendix 3, titled \"SAMPLE RAG CODE,\" provides Python code that sets up a Retrieval-Augmented Generation (RAG) system using FastAPI. This code demonstrates the initialization and configuration of key RAG components, including a retriever, a risk detector, and both local and API-based language model generators, with settings managed via environment variables and startup logging for system status."
+    },
+    {
+      "title": "APPENDIX 3",
+      "node_id": "0033",
+      "start_index": 40,
+      "end_index": 40,
+      "summary": "This partial document presents sample Python code for a Retrieval-Augmented Generation (RAG) system, implemented as a FastAPI web application. It outlines the initialization of core RAG components such as a retriever, a local or API-based text generator (LLM), a risk detector, and an ingestor. The code demonstrates how various system parameters, including the embedding model, local LLM path, and Chroma DB directory, are configured via environment variables, and includes startup logging to display the system's operational status and component availability."
+    },
+    {
+      "title": "SAMPLE RAG CODE",
+      "node_id": "0034",
+      "start_index": 40,
+      "end_index": 48,
+      "summary": "This partial document contains sample Python code for a FastAPI application implementing a Retrieval-Augmented Generation (RAG) system, specifically tailored as a \"compassionate mental health support assistant.\"\n\nThe main points covered are:\n1.  **RAG System Architecture**: The code initializes and integrates components for document retrieval, text ingestion, risk detection, and response generation using either local or API-based Large Language Models (LLMs).\n2.  **API Endpoints**: It defines several API endpoints for core functionalities, including:\n    *   `/ingest` and `/ingest/{user_id}`: For uploading files or text into a main database or user-specific collections.\n    *   `/ask`: The primary RAG endpoint that retrieves relevant documents, evaluates potential risks, generates an empathetic response using an LLM, and optionally persists the conversation.\n    *   `/retrieve` and `/retrieve/{user_id}`: To fetch retrieved documents or generate/retrieve user-specific summaries.\n    *   `/detector`: To run the risk detection module.\n    *   `/list_users`, `/clear_user`, `/clear_main`: For managing user-specific data collections and the main database.\n3.  **Data Management**: The system utilizes ChromaDB for vector storage, maintaining a `main_db` for general documents and `user_<id>` collections for individual user interactions and summaries.\n4.  **References**: Following the code, there is a list of academic and technical references related to large language models, Retrieval-Augmented Generation, conversational AI, mental health applications of AI, and ethical considerations in AI design."
+    },
+    {
+      "title": "REFERENCES",
+      "node_id": "0035",
+      "start_index": 48,
+      "end_index": 48,
+      "summary": "This partial document is a reference list (Chapter 7) containing academic papers and technical reports. The references cover foundational topics in artificial intelligence, including large language models, few-shot learning, and attention mechanisms. A significant portion focuses on conversational AI and chatbots, particularly their application in mental health, therapy, and support. It also includes advanced techniques like retrieval-augmented generation and discusses ethical considerations, safety, transparency, and human oversight in the design of AI-powered therapeutic chatbots."
+    }
+  ]
+}
