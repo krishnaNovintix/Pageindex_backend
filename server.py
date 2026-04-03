@@ -141,4 +141,4 @@ async def health():
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "8001"))
-    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("server:app", port=port, reload=False)

@@ -1,12 +1,7 @@
-import httpx
 from agentops.sdk.decorators import operation
 from Agents.Page_index.state import PageIndexState, IndexOutput, RetrieveOutput
 from Agents.Page_index.utils import build_index_request, build_retrieve_request
 from Agents.Page_index.logger import log_node_start, log_node_end, log_error
-
-import os as _os
-_port = _os.getenv("PORT", "8001")
-PAGEINDEX_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 @operation(name="pageindex_index")
@@ -22,27 +17,18 @@ def call_index(state: PageIndexState) -> dict:
     )
 
     try:
-        response = httpx.post(
-            f"{PAGEINDEX_BASE_URL}/pageindex-api/index",
-            json=payload,
-            timeout=300.0,
-        )
-        response.raise_for_status()
-        data = response.json()
+        from Agents.pageindex_api.router import IndexRequest, index_document
+        req = IndexRequest(pdf_path=payload["pdf_path"], output_dir=payload.get("output_dir", "results"))
+        data = index_document(req)
 
         output = IndexOutput(
             success=True,
-            structure_path=data.get("structure_path"),
-            message=data.get("message", "PDF indexed successfully"),
+            structure_path=data.structure_path,
+            message=data.message,
         )
 
         log_node_end("call_index", f"structure_path={output.structure_path}")
         return {"index_output": output}
-
-    except httpx.HTTPStatusError as e:
-        error_msg = f"HTTP {e.response.status_code}: {e.response.text}"
-        log_error("call_index", error_msg)
-        return {"index_output": IndexOutput(success=False, message=error_msg)}
 
     except Exception as e:
         log_error("call_index", str(e))
@@ -64,29 +50,25 @@ def call_retrieve(state: PageIndexState) -> dict:
     )
 
     try:
-        response = httpx.post(
-            f"{PAGEINDEX_BASE_URL}/pageindex-api/retrieve",
-            json=payload,
-            timeout=120.0,
+        from Agents.pageindex_api.router import RetrieveRequest, retrieve
+        req = RetrieveRequest(
+            pdf_path=payload["pdf_path"],
+            structure_path=payload["structure_path"],
+            query=payload["query"],
+            top_k=payload.get("top_k", 5),
         )
-        response.raise_for_status()
-        data = response.json()
+        data = retrieve(req)
 
         output = RetrieveOutput(
-            query=data["query"],
-            nodes_used=data["nodes_used"],
-            node_titles=data["node_titles"],
-            thinking=data.get("thinking", ""),
-            answer=data["answer"],
+            query=data.query,
+            nodes_used=data.nodes_used,
+            node_titles=data.node_titles,
+            thinking=data.thinking,
+            answer=data.answer,
         )
 
         log_node_end("call_retrieve", f"nodes_used={output.nodes_used}")
         return {"retrieve_output": output}
-
-    except httpx.HTTPStatusError as e:
-        error_msg = f"HTTP {e.response.status_code}: {e.response.text}"
-        log_error("call_retrieve", error_msg)
-        raise RuntimeError(f"Retrieval failed: {error_msg}")
 
     except Exception as e:
         log_error("call_retrieve", str(e))

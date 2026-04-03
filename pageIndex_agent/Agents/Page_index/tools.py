@@ -1,11 +1,6 @@
-import httpx
 from langchain_core.tools import tool
 from agentops.sdk.decorators import tool as agentops_tool
 from Agents.Page_index.logger import log_node_start, log_node_end, log_error
-
-import os as _os
-_port = _os.getenv("PORT", "8001")
-PAGEINDEX_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 @agentops_tool(name="index_pdf")
@@ -23,23 +18,11 @@ def index_pdf(pdf_path: str, output_dir: str) -> str:
     """
     log_node_start("tool:index_pdf")
     try:
-        response = httpx.post(
-            f"{PAGEINDEX_BASE_URL}/pageindex-api/index",
-            json={"pdf_path": pdf_path, "output_dir": output_dir},
-            timeout=3000.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-        structure_path = data.get("structure_path", "unknown")
-        message = data.get("message", "PDF indexed successfully")
-        log_node_end("tool:index_pdf", f"structure_path={structure_path}")
-        return f"{message} | structure_path={structure_path}"
-
-    except httpx.HTTPStatusError as e:
-        error_msg = f"HTTP {e.response.status_code}: {e.response.text}"
-        log_error("tool:index_pdf", error_msg)
-        return f"Indexing failed: {error_msg}"
-
+        from Agents.pageindex_api.router import IndexRequest, index_document
+        req = IndexRequest(pdf_path=pdf_path, output_dir=output_dir)
+        data = index_document(req)
+        log_node_end("tool:index_pdf", f"structure_path={data.structure_path}")
+        return f"{data.message} | structure_path={data.structure_path}"
     except Exception as e:
         log_error("tool:index_pdf", str(e))
         return f"Indexing failed: {str(e)}"
@@ -67,35 +50,16 @@ def retrieve_from_pdf(
     """
     log_node_start("tool:retrieve_from_pdf")
     try:
-        response = httpx.post(
-            f"{PAGEINDEX_BASE_URL}/pageindex-api/retrieve",
-            json={
-                "pdf_path": pdf_path,
-                "structure_path": structure_path,
-                "query": query,
-                "top_k": top_k,
-            },
-            timeout=1200.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-
-        node_titles = ", ".join(data.get("node_titles", []))
-        thinking = data.get("thinking", "")
-        answer = data.get("answer", "")
-
-        log_node_end("tool:retrieve_from_pdf", f"nodes_used={data.get('nodes_used')}")
+        from Agents.pageindex_api.router import RetrieveRequest, retrieve
+        req = RetrieveRequest(pdf_path=pdf_path, structure_path=structure_path, query=query, top_k=top_k)
+        data = retrieve(req)
+        node_titles = ", ".join(data.node_titles)
+        log_node_end("tool:retrieve_from_pdf", f"nodes_used={data.nodes_used}")
         result = f"Sections used: {node_titles}\n"
-        if thinking:
-            result += f"Reasoning: {thinking}\n"
-        result += f"Answer: {answer}"
+        if data.thinking:
+            result += f"Reasoning: {data.thinking}\n"
+        result += f"Answer: {data.answer}"
         return result
-
-    except httpx.HTTPStatusError as e:
-        error_msg = f"HTTP {e.response.status_code}: {e.response.text}"
-        log_error("tool:retrieve_from_pdf", error_msg)
-        return f"Retrieval failed: {error_msg}"
-
     except Exception as e:
         log_error("tool:retrieve_from_pdf", str(e))
         return f"Retrieval failed: {str(e)}"

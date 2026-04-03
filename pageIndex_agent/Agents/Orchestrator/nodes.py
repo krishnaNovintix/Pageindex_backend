@@ -1,6 +1,5 @@
 import json
 import uuid
-import httpx
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from agentops.sdk.decorators import agent, operation, tool
@@ -8,12 +7,6 @@ from agentops.sdk.decorators import agent, operation, tool
 from Agents.Orchestrator.state import OrchestratorState
 from Agents.Orchestrator.prompt import PLAN_SYSTEM_PROMPT
 from Agents.Orchestrator.logger import log_node_start, log_node_end, log_error
-
-# Both sub-agents are served on the same FastAPI server.
-# On Render, PORT env var gives the actual port; fall back to 8001 locally.
-import os as _os
-_port = _os.getenv("PORT", "8001")
-_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 def _get_llm() -> ChatGoogleGenerativeAI:
@@ -47,81 +40,70 @@ class OrchestratorAgent:
 
     @tool(name="retrieve_from_pageindex")
     async def retrieve(self, pdf_path: str, structure_path: str, topic: str) -> str:
-        """Call the PageIndex API directly to retrieve content about a topic."""
+        """Call the PageIndex retrieve function in-process to get content about a topic."""
         try:
-            async with httpx.AsyncClient(timeout=1200.0) as client:
-                resp = await client.post(
-                    f"{_BASE_URL}/pageindex-api/retrieve",
-                    json={
-                        "pdf_path": pdf_path,
-                        "structure_path": structure_path,
-                        "query": topic,
-                        "top_k": 5,
-                    },
-                )
-                if resp.status_code == 404:
-                    detail = resp.json().get("detail", "File not found")
-                    log_error("orchestrator:retrieve", f"404: {detail}")
-                    return f"Retrieval failed: {detail}"
-                resp.raise_for_status()
-                data = resp.json()
-                node_titles = ", ".join(data.get("node_titles", []))
-                thinking = data.get("thinking", "")
-                answer = data.get("answer", "")
-                result = f"Sections used: {node_titles}\n"
-                if thinking:
-                    result += f"Reasoning: {thinking}\n"
-                result += f"Answer: {answer}"
-                return result
+            from Agents.pageindex_api.router import RetrieveRequest, retrieve as _retrieve_fn
+            req = RetrieveRequest(
+                pdf_path=pdf_path,
+                structure_path=structure_path,
+                query=topic,
+                top_k=5,
+            )
+            # retrieve() is a sync function — call directly (FastAPI runs it in threadpool)
+            import asyncio
+            result = await asyncio.get_event_loop().run_in_executor(None, _retrieve_fn, req)
+            node_titles = ", ".join(result.node_titles)
+            out = f"Sections used: {node_titles}\n"
+            if result.thinking:
+                out += f"Reasoning: {result.thinking}\n"
+            out += f"Answer: {result.answer}"
+            return out
         except Exception as exc:
             log_error("orchestrator:retrieve", str(exc))
             return f"Retrieval failed: {exc}"
 
     @tool(name="call_summarization_agent")
     async def call_summarization(self, user_request: str, task_results: list) -> str:
-        """Call the Summarization agent to produce a coherent final answer."""
+        """Call the Summarization agent in-process to produce a coherent final answer."""
         try:
-            async with httpx.AsyncClient(timeout=300.0) as client:
-                resp = await client.post(
-                    f"{_BASE_URL}/summarization/run",
-                    json={
-                        "user_request": user_request,
-                        "task_results": task_results,
-                    },
-                )
-                if resp.status_code == 422:
-                    log_error(
-                        "orchestrator:call_summarization",
-                        f"422 validation error — body={resp.text}",
-                    )
-                resp.raise_for_status()
-                return resp.json().get("summary", "")
+            from Agents.Summarization.graph import build_graph as build_summarization_graph
+            graph = build_summarization_graph()
+            # Coerce task_results entries to the expected dict shape
+            coerced = [
+                tr if isinstance(tr, dict) else {"topic": str(tr), "pageindex_result": "", "mcp_result": ""}
+                for tr in task_results
+            ]
+            result = await graph.ainvoke(
+                {
+                    "user_request": user_request,
+                    "task_results": coerced,
+                    "summary": "",
+                    "error": None,
+                }
+            )
+            return result.get("summary", "")
         except Exception as exc:
             log_error("orchestrator:call_summarization", str(exc))
             return f"Summarization failed: {exc}"
 
     @tool(name="post_to_slack")
     async def post_to_slack(self, slack_instruction: str, content: str) -> str:
-        """Call the Slack sub-agent to post content to a channel."""
+        """Call the Slack sub-agent in-process to post content to a channel."""
         message = f"{slack_instruction}\n\nContent to include:\n{content}"
         try:
-            async with httpx.AsyncClient(timeout=300.0) as client:
-                resp = await client.post(
-                    f"{_BASE_URL}/mcp-agent/run",
-                    json={"message": message, "thread_id": f"orch_{uuid.uuid4().hex}"},
-                )
-                resp.raise_for_status()
-                result = resp.json().get("response", "")
-                # Guard against None or list (Gemini content blocks)
-                if not isinstance(result, str):
-                    if isinstance(result, list):
-                        result = " ".join(
-                            item.get("text", "") if isinstance(item, dict) else str(item)
-                            for item in result
-                        ).strip()
-                    else:
-                        result = str(result) if result is not None else ""
-                return result
+            from Agents.slack_agent.graph import build_graph as build_slack_graph
+            graph = await build_slack_graph()
+            result = await graph.ainvoke(
+                {"messages": [HumanMessage(content=message)]},
+                config={"configurable": {"thread_id": f"orch_{uuid.uuid4().hex}"}},
+            )
+            raw = result["messages"][-1].content
+            if isinstance(raw, list):
+                return " ".join(
+                    item.get("text", "") if isinstance(item, dict) else str(item)
+                    for item in raw
+                ).strip()
+            return raw or ""
         except Exception as exc:
             log_error("orchestrator:post_to_slack", str(exc))
             return f"Slack action failed: {exc}"
