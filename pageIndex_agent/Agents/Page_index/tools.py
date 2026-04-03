@@ -3,7 +3,9 @@ from langchain_core.tools import tool
 from agentops.sdk.decorators import tool as agentops_tool
 from Agents.Page_index.logger import log_node_start, log_node_end, log_error
 
-PAGEINDEX_BASE_URL = "http://localhost:8001"
+import os as _os
+_port = _os.getenv("PORT", "8001")
+PAGEINDEX_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 @agentops_tool(name="index_pdf")

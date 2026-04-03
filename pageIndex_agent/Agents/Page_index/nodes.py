@@ -4,7 +4,9 @@ from Agents.Page_index.state import PageIndexState, IndexOutput, RetrieveOutput
 from Agents.Page_index.utils import build_index_request, build_retrieve_request
 from Agents.Page_index.logger import log_node_start, log_node_end, log_error
 
-PAGEINDEX_BASE_URL = "http://localhost:8001"
+import os as _os
+_port = _os.getenv("PORT", "8001")
+PAGEINDEX_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 @operation(name="pageindex_index")

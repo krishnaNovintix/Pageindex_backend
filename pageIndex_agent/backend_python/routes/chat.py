@@ -1,19 +1,19 @@
 """
 /api/chat route
 
-POST / — proxy the user message to the Orchestrator agent and return its response.
+POST / — run the Orchestrator agent in-process and return its response.
 
 Body:   { message, pdf_path, structure_path }
 Return: { response, task_results }
 """
 
-import os
-import httpx
 from fastapi import APIRouter, HTTPException
+from Agents.Orchestrator.graph import build_graph
+from Agents.Orchestrator.logger import log_request, log_response, log_error, reset_log
+import agentops
+from agentops import start_trace, end_trace
 
 router = APIRouter()
-
-AGENT_URL = os.getenv("AGENT_URL", "http://localhost:8001")
 
 
 @router.post("/")
@@ -32,31 +32,36 @@ async def chat(body: dict):
             detail="structure_path is required. Index the document first.",
         )
 
+    trace = start_trace(trace_name="orchestrator-request", tags=["orchestrator", "request"])
     try:
-        async with httpx.AsyncClient(timeout=300.0) as client:
-            resp = await client.post(
-                f"{AGENT_URL}/orchestrator/run",
-                json={"message": message, "pdf_path": pdf_path, "structure_path": structure_path},
-            )
+        reset_log()
+        log_request("orchestrator/run", f"message={message!r} pdf={pdf_path!r}")
 
-        data = resp.json()
+        graph = build_graph()
+        result = await graph.ainvoke(
+            {
+                "user_request": message,
+                "pdf_path": pdf_path,
+                "structure_path": structure_path,
+                "tasks": [],
+                "current_task_index": 0,
+                "task_results": [],
+                "final_response": "",
+                "error": None,
+            }
+        )
 
-        if not resp.is_success:
-            raise HTTPException(
-                status_code=resp.status_code,
-                detail=data.get("detail") or "Orchestrator returned an error",
-            )
+        final_response = result.get("final_response", "Orchestration completed.")
+        task_results   = result.get("task_results", [])
+
+        log_response("orchestrator/run", f"tasks_completed={len(task_results)}")
+        end_trace(trace_context=trace, end_state="Success")
 
         return {
-            "response": data.get("response"),
-            "task_results": data.get("task_results") or [],
+            "response": final_response,
+            "task_results": task_results,
         }
 
-    except httpx.ConnectError:
-        raise HTTPException(
-            status_code=503,
-            detail="Agent server is not running. Start it with: python server.py",
-        )
     except HTTPException:
         raise
     except Exception as exc:

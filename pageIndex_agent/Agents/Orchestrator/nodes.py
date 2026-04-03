@@ -9,8 +9,11 @@ from Agents.Orchestrator.state import OrchestratorState
 from Agents.Orchestrator.prompt import PLAN_SYSTEM_PROMPT
 from Agents.Orchestrator.logger import log_node_start, log_node_end, log_error
 
-# Both sub-agents are served on the same FastAPI server at localhost:8001
-_BASE_URL = "http://localhost:8001"
+# Both sub-agents are served on the same FastAPI server.
+# On Render, PORT env var gives the actual port; fall back to 8001 locally.
+import os as _os
+_port = _os.getenv("PORT", "8001")
+_BASE_URL = _os.getenv("AGENT_URL", f"http://localhost:{_port}")
 
 
 def _get_llm() -> ChatGoogleGenerativeAI:

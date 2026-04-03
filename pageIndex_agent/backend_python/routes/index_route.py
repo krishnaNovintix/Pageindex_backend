@@ -1,24 +1,41 @@
 """
 /api/index route
 
-POST / — index a PDF via the PageIndex API and return the structure path.
+POST / — index a PDF in-process via the PageIndex core and return the structure path.
 
 Body:   { pdf_path, structure_path? }
 Return: { response, structure_path }
 """
 
+import json
 import os
 from pathlib import Path
 
-import httpx
+import agentops
+from agentops import TraceState
 from fastapi import APIRouter, HTTPException
+from asyncio import get_event_loop
+from concurrent.futures import ThreadPoolExecutor
+
+import pageIndex_agent.pageindex.utils as pi_utils
+from pageIndex_agent.pageindex.page_index import page_index_main
+from pageIndex_agent.pageindex.utils import ConfigLoader
 
 router = APIRouter()
 
-AGENT_URL = os.getenv("AGENT_URL", "http://localhost:8001")
-
 _BASE        = Path(__file__).resolve().parent.parent
 _RESULTS_DIR = Path(os.getenv("RESULTS_DIR", str(_BASE / "results")))
+
+_executor = ThreadPoolExecutor(max_workers=2)
+
+
+def _count_nodes(tree: list) -> int:
+    count = 0
+    for node in tree:
+        count += 1
+        if node.get("nodes"):
+            count += _count_nodes(node["nodes"])
+    return count
 
 
 @router.post("/")
@@ -27,40 +44,44 @@ async def index_document(body: dict):
     if not pdf_path:
         raise HTTPException(status_code=400, detail="pdf_path is required")
 
-    # Use the provided structure_path (set at upload time) or derive one
+    pdf_path = os.path.abspath(pdf_path)
+    if not os.path.isfile(pdf_path):
+        raise HTTPException(status_code=404, detail=f"PDF not found: {pdf_path}")
+
+    # Use the provided structure_path or derive one
     structure_path = (body.get("structure_path") or "").strip()
     if not structure_path:
         stem = Path(pdf_path).stem
         structure_path = str(_RESULTS_DIR / f"{stem}_structure.json")
 
-    output_dir = str(Path(structure_path).parent)
+    output_dir = Path(structure_path).parent
+    output_dir.mkdir(parents=True, exist_ok=True)
 
+    trace = agentops.start_trace(
+        trace_name="pdf_indexing",
+        tags=["indexing", "pdf", Path(pdf_path).name],
+    )
     try:
-        # Call /pageindex-api/index directly — avoids LLM path parsing on Windows
-        async with httpx.AsyncClient(timeout=600.0) as client:
-            resp = await client.post(
-                f"{AGENT_URL}/pageindex-api/index",
-                json={"pdf_path": pdf_path, "output_dir": output_dir},
-            )
+        opt = ConfigLoader().load(None)
 
-        data = resp.json()
+        # page_index_main is CPU-bound/sync — run in thread pool to avoid blocking
+        loop = get_event_loop()
+        result = await loop.run_in_executor(_executor, page_index_main, pdf_path, opt)
 
-        if not resp.is_success:
-            raise HTTPException(
-                status_code=resp.status_code,
-                detail=data.get("detail") or "Indexing failed",
-            )
+        pdf_stem = Path(pdf_path).stem
+        output_path = output_dir / f"{pdf_stem}_structure.json"
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
 
-        # Use the actual structure_path returned by the API (most authoritative)
-        actual_structure_path = data.get("structure_path") or structure_path
-        return {"response": data.get("message"), "structure_path": actual_structure_path}
+        agentops.end_trace(trace, end_state=TraceState.SUCCESS)
+        return {
+            "response": f"Indexed successfully. Structure saved to {output_path}",
+            "structure_path": str(output_path),
+        }
 
-    except httpx.ConnectError:
-        raise HTTPException(
-            status_code=503,
-            detail="PageIndex agent is not running. Start it with: python server.py",
-        )
     except HTTPException:
+        agentops.end_trace(trace, end_state=TraceState.ERROR)
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        agentops.end_trace(trace, end_state=TraceState.ERROR)
+        raise HTTPException(status_code=500, detail=f"Indexing failed: {exc}")
