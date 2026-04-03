@@ -14,3 +14,5 @@ langchain-core
 langchain-google-genai
 python-dotenv
 slack_sdk
+motor
+pymongo
