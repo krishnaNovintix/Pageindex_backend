@@ -66,9 +66,19 @@ async def index_document(body: dict):
     try:
         opt = ConfigLoader().load(None)
 
-        # page_index_main is CPU-bound/sync — run in thread pool to avoid blocking
+        # page_index_main calls asyncio.run() internally — it must run in a
+        # thread with its own fresh event loop, not in the FastAPI event loop.
+        def _run_in_thread():
+            import asyncio
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                return page_index_main(pdf_path, opt)
+            finally:
+                loop.close()
+
         loop = get_event_loop()
-        result = await loop.run_in_executor(_executor, page_index_main, pdf_path, opt)
+        result = await loop.run_in_executor(_executor, _run_in_thread)
 
         pdf_stem = Path(pdf_path).stem
         output_path = output_dir / f"{pdf_stem}_structure.json"
